@@ -1,0 +1,13 @@
+**/.env
+**/.env.*
+!**/.env.example
+**/node_modules/
+**/target/
+**/dist/
+**/logs/
+**/*.log
+**/docker-data/
+**/*-data/
+.publish/
+**/.idea/
+**/.vscode/

@@ -1,0 +1,5 @@
+Project Cedar is a document-processing reliability exercise for DocNest.
+
+When a user uploads a technical report, the document service stores the file and publishes an event to Kafka. The indexing service extracts the text, creates a concise summary and topic tags, and indexes the searchable fields in Elasticsearch. Search responses may be cached in Redis, while document changes invalidate stale cache entries.
+
+The acceptance criteria are intentionally concrete: preserve the Project Cedar name, identify Kafka and Elasticsearch as core components, and describe telemetry and retry behavior without inventing performance numbers. Transient AI service failures are retried up to three times. Invalid summaries or fewer than three useful tags are rejected instead of being stored as completed analysis.

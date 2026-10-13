@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:where(button, input, select, textarea, a):focus-visible {
+  outline: 2px solid var(--theme-primary, #1d4ed8);
+  outline-offset: 3px;
+}
+.document-table { table-layout: fixed; }
+.document-table th:first-child { width: 36%; }
+.document-table th:last-child { width: 160px; }
+.document-table td { overflow-wrap: anywhere; }
+.document-table button { min-width: 36px; min-height: 36px; }
+@media (max-width: 767px) {
+  .document-table, .document-table tbody { display: block; width: 100%; }
+  .document-table thead {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap;
+  }
+  .document-table tr { display: block; padding: 12px 0; }
+  .document-table td { display: block; width: 100%; }
+  .document-table td[data-label] { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .document-table td[data-label]::before { content: attr(data-label); font-weight: 500; color: #4b5563; }
+  .document-table td[data-label="Actions"] { justify-content: flex-end; }
+  .document-table td[data-label="Actions"]::before { margin-right: auto; }
+}
+
+/* User palettes keep status/error colors semantic while tinting the app chrome. */
+[data-theme] {
+  --theme-primary: #1f2937;
+  --theme-primary-hover: #111827;
+  --theme-background: #f8fafc;
+  --theme-muted: #f1f5f9;
+  --theme-border: #e2e8f0;
+  --theme-soft: #e2e8f0;
+  --theme-ink: #1f2937;
+  color: #111827;
+  background-color: var(--theme-background);
+}
+[data-theme="ocean"] {
+  --theme-primary: #1d4ed8;
+  --theme-primary-hover: #1e40af;
+  --theme-background: #eff6ff;
+  --theme-muted: #eaf2ff;
+  --theme-border: #bfdbfe;
+  --theme-soft: #dbeafe;
+  --theme-ink: #1e40af;
+}
+[data-theme="forest"] {
+  --theme-primary: #047857;
+  --theme-primary-hover: #065f46;
+  --theme-background: #f0fdf4;
+  --theme-muted: #eafaf1;
+  --theme-border: #bbf7d0;
+  --theme-soft: #dcfce7;
+  --theme-ink: #065f46;
+}
+[data-theme="plum"] {
+  --theme-primary: #7e22ce;
+  --theme-primary-hover: #6b21a8;
+  --theme-background: #faf5ff;
+  --theme-muted: #f5edff;
+  --theme-border: #e9d5ff;
+  --theme-soft: #f3e8ff;
+  --theme-ink: #6b21a8;
+}
+[data-theme="sunset"] {
+  --theme-primary: #9a3412;
+  --theme-primary-hover: #7c2d12;
+  --theme-background: #fff7ed;
+  --theme-muted: #fff1e3;
+  --theme-border: #fed7aa;
+  --theme-soft: #ffedd5;
+  --theme-ink: #9a3412;
+}
+[data-theme] .bg-black { background-color: var(--theme-primary); }
+[data-theme] button.bg-black:hover:not(:disabled) { background-color: var(--theme-primary-hover); }
+[data-theme] .bg-gray-50,
+[data-theme] .bg-slate-50 { background-color: var(--theme-background); }
+[data-theme] .bg-gray-100 { background-color: var(--theme-muted); }
+[data-theme] .border,
+[data-theme] .border-b,
+[data-theme] .border-r,
+[data-theme] .border-t,
+[data-theme] .divide-y > :not([hidden]) ~ :not([hidden]) { border-color: var(--theme-border); }
+[data-theme] .hover\:bg-gray-100:hover,
+[data-theme] .hover\:bg-gray-50:hover,
+[data-theme] .hover\:bg-slate-50:hover { background-color: var(--theme-muted); }
+[data-theme] .accent-black { accent-color: var(--theme-primary); }
+[data-theme] .focus\:border-black:focus { border-color: var(--theme-primary); }
+[data-theme] .focus\:ring-black:focus { --tw-ring-color: var(--theme-primary); }
+[data-theme] .bg-violet-50 { background-color: var(--theme-muted); }
+[data-theme] .bg-violet-100 { background-color: var(--theme-soft); }
+[data-theme] .text-violet-600,
+[data-theme] .text-violet-700 { color: var(--theme-ink); }
+[data-theme] .hover\:text-violet-800:hover { color: var(--theme-primary-hover); }

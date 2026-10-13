@@ -1,0 +1,38 @@
+name: Backend checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  maven:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Run Maven tests (including Docker-backed pipeline tests)
+        run: mvn -B -ntp test
+      - name: Publish test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-reports
+          path: services/**/target/surefire-reports/
+          if-no-files-found: warn
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Docker Compose configuration
+        env:
+          POSTGRES_USER: ci_user
+          POSTGRES_PASSWORD: ci-only-database-password
+          MINIO_ROOT_USER: ci_admin
+          MINIO_ROOT_PASSWORD: ci-only-minio-password
+        run: docker compose -f infra/docker-compose.yml config --quiet

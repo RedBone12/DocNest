@@ -1,0 +1,68 @@
+server:
+  port: 8081
+  
+
+spring:
+  application:
+    name: document-service
+
+  web:
+    error:
+      include-message: always
+      include-binding-errors: always
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/documents_db}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false # Disabled for production
+    properties:
+      hibernate.jdbc.time_zone: Asia/Kolkata
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: document-service
+      auto-offset-reset: earliest
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+      file-size-threshold: 1KB
+
+minio:
+  url: ${MINIO_URL:http://localhost:9000}
+  access-key: ${MINIO_ROOT_USER}
+  secret-key: ${MINIO_ROOT_PASSWORD}
+  bucket: ${MINIO_BUCKET:documents}
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+
+logging:
+  level:
+    com.priyanshu.documents.document_service: INFO
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/document-service.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30

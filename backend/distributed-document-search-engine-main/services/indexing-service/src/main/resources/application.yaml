@@ -1,0 +1,60 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: search-indexer-service
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      connect-timeout: 1s
+      timeout: 1s
+
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/documents_db}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: search-indexer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.priyanshu.documents.common.events,com.priyanshu.documents
+        spring.json.type.mapping: DocumentUploadedEvent:com.priyanshu.documents.common.events.DocumentUploadedEvent,DocumentDeletedEvent:com.priyanshu.documents.common.events.DocumentDeletedEvent,com.priyanshu.documents.DocumentDeletedEvent:com.priyanshu.documents.common.events.DocumentDeletedEvent
+    listener:
+      ack-mode: manual
+
+elasticsearch:
+  host: localhost
+  port: 9200
+
+minio:
+  url: ${MINIO_URL:http://localhost:9000}
+  access-key: ${MINIO_ROOT_USER}
+  secret-key: ${MINIO_ROOT_PASSWORD}
+  bucket: ${MINIO_BUCKET:documents}
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+
+ai:
+  openai:
+    api-key: ${OPENAI_API_KEY:}
+    model: ${OPENAI_MODEL:gpt-4o-mini}
+    endpoint: ${OPENAI_ENDPOINT:https://api.openai.com/v1/responses}
+    request-timeout: ${OPENAI_REQUEST_TIMEOUT:45s}
+    max-attempts: ${OPENAI_MAX_ATTEMPTS:3}
+    retry-delay: ${OPENAI_RETRY_DELAY:1s}

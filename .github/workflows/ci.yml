@@ -1,0 +1,62 @@
+name: DocNest CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: backend/distributed-document-search-engine-main
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Maven tests
+        run: mvn -B -ntp test
+      - name: Test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-reports
+          path: backend/distributed-document-search-engine-main/services/**/target/surefire-reports/
+          if-no-files-found: warn
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/distributed-document-search-engine-ui-main
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/distributed-document-search-engine-ui-main/package-lock.json
+      - run: npm ci
+      - name: TypeScript and production build
+        env:
+          VITE_API_BASE_URL: http://localhost:8080
+        run: npm run build
+      - name: ESLint
+        run: npm run lint
+      - name: Frontend behavior tests
+        run: npm test
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compose configuration validation
+        env:
+          POSTGRES_USER: ci_user
+          POSTGRES_PASSWORD: ci-only-database-password
+          MINIO_ROOT_USER: ci_admin
+          MINIO_ROOT_PASSWORD: ci-only-minio-password
+        run: docker compose -f backend/distributed-document-search-engine-main/infra/docker-compose.yml config --quiet
