@@ -169,7 +169,7 @@ CI builds its MinIO test image from upstream commit `07c3a429bfed433e49018cb0f78
 
 ```powershell
 docker build -t docnest/minio-ci:2025-09-07 -f infra/minio-ci.Dockerfile infra
-mvn.cmd -B -ntp -Ddocnest.minio.image=docnest/minio-ci:2025-09-07 test
+mvn.cmd -B -ntp "-Ddocnest.minio.image=docnest/minio-ci:2025-09-07" test
 ```
 
 The live AI acceptance command is:
