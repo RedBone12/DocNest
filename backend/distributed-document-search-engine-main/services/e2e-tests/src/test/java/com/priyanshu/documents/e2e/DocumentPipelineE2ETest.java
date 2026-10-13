@@ -107,7 +107,7 @@ class DocumentPipelineE2ETest {
 
     @Container
     private static final GenericContainer<?> MINIO = new GenericContainer<>(
-            DockerImageName.parse("quay.io/minio/minio:latest"))
+            DockerImageName.parse(System.getProperty("docnest.minio.image", "quay.io/minio/minio:latest")))
             .withEnv("MINIO_ROOT_USER", "minioadmin")
             .withEnv("MINIO_ROOT_PASSWORD", "minioadmin")
             .withCommand("server", "/data")

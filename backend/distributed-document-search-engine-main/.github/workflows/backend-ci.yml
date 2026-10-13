@@ -16,8 +16,10 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
+      - name: Build MinIO test image from pinned upstream source
+        run: docker build -t docnest/minio-ci:2025-09-07 -f infra/minio-ci.Dockerfile infra
       - name: Run Maven tests (including Docker-backed pipeline tests)
-        run: mvn -B -ntp test
+        run: mvn -B -ntp -Ddocnest.minio.image=docnest/minio-ci:2025-09-07 test
       - name: Publish test reports
         if: always()
         uses: actions/upload-artifact@v4

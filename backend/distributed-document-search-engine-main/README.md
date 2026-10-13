@@ -163,7 +163,16 @@ mvn.cmd -B -ntp test
 
 GitHub Actions in `.github/workflows/backend-ci.yml` runs Maven tests and Compose configuration validation on pushes and PRs. The Maven reactor includes all four services and common-events. Container pipeline tests use isolated Testcontainers resources (Kafka, Redis, Elasticsearch and MinIO); they do not modify your existing Compose data. They are skipped if Docker is unavailable. CI uses an Ubuntu Docker runner. Inspect test reports rather than treating skipped tests as passed.
 
-Ordinary tests do not call the paid AI API. The explicit live acceptance profile is:
+Ordinary tests do not call the paid AI API.
+
+CI builds its MinIO test image from upstream commit `07c3a429bfed433e49018cb0f78a52145d4bedeb` using `infra/minio-ci.Dockerfile`. Official prebuilt MinIO images became unavailable to anonymous CI pulls. This test-only build does not replace your existing storage container or touch its volumes. To use it locally:
+
+```powershell
+docker build -t docnest/minio-ci:2025-09-07 -f infra/minio-ci.Dockerfile infra
+mvn.cmd -B -ntp -Ddocnest.minio.image=docnest/minio-ci:2025-09-07 test
+```
+
+The live AI acceptance command is:
 
 ```powershell
 mvn.cmd -B -ntp -pl services/indexing-service -am -Pai-live verify
