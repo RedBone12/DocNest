@@ -6,9 +6,10 @@ import { useAuth } from "../common/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import { useDocuments } from "../../hooks/useDocuments";
 import { usePreferences } from "../../hooks/usePreferences";
+import { sessionEmail } from "../../auth/session";
 
 function getUserFromToken(token: string | null): string {
-  const storedUser = localStorage.getItem("authUser");
+  const storedUser = sessionEmail();
 
   if (storedUser) return storedUser;
   if (!token) return "User";
@@ -59,7 +60,7 @@ export const AppLayout = () => {
   }, [userPanelOpen]);
 
   const handleLogout = () => {
-    logout();
+    void logout().catch((error: unknown) => window.alert(error instanceof Error ? error.message : "Unable to revoke your session."));
     setSidebarOpen(false);
     setUserPanelOpen(false);
     navigate("/login", { replace: true });

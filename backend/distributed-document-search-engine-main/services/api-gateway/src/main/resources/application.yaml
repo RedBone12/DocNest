@@ -1,6 +1,10 @@
 server:
   port: 8080
 
+docnest:
+  cors-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:[*],http://127.0.0.1:[*]}
+  auth-service-url: ${AUTH_SERVICE_URL:http://localhost:8081}
+
 spring:
   application:
     name: api-gateway
@@ -33,19 +37,12 @@ spring:
     hibernate:
       ddl-auto: none
 
-  cors:
-    allowed-origins: http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000
-    allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
-    allowed-headers: "*"
-    allow-credentials: "true"
-    max-age: 3600
-
 logging:
   level:
     root: INFO
     com.priyanshu.api_gateway: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: INFO
+    org.springframework.cloud.gateway: INFO
     org.springframework.web: INFO
   pattern:
     console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

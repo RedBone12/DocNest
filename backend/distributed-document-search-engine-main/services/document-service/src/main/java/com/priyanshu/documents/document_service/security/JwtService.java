@@ -26,14 +26,18 @@ public class JwtService {
         return key;
     }
 
-    // private final String SECRET = "my-super-secret-key-32-bytes-min";
-
     public String generateToken(String userId) {
+        return generateToken(userId, false);
+    }
+
+    public String generateToken(String userId, boolean rememberMe) {
         return Jwts.builder()
                 .setSubject(userId)
+                .setId(java.util.UUID.randomUUID().toString())
                 .claim("type", "user")
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day expiration
+                .setExpiration(new Date(System.currentTimeMillis()
+                        + java.time.Duration.ofDays(rememberMe ? 30 : 1).toMillis()))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

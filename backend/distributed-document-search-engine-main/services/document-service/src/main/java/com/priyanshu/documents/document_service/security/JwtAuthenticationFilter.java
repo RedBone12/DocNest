@@ -20,9 +20,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final com.priyanshu.documents.document_service.service.AccountService accounts;
 
-    public JwtAuthenticationFilter(JwtService jwtService) {
+    public JwtAuthenticationFilter(JwtService jwtService, com.priyanshu.documents.document_service.service.AccountService accounts) {
         this.jwtService = jwtService;
+        this.accounts = accounts;
     }
 
     @Override
@@ -55,11 +57,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if ("service".equals(tokenType)) {
                 authorities = List.of(new SimpleGrantedAuthority("SERVICE"));
             } else if ("user".equals(tokenType)) {
+                try {
+                    accounts.requireSession(token);
+                } catch (org.springframework.web.server.ResponseStatusException exception) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
                 authorities = List.of(new SimpleGrantedAuthority("USER"));
             } else {
-                response.sendError(
-                        HttpServletResponse.SC_UNAUTHORIZED,
-                        "Unsupported token type");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
 

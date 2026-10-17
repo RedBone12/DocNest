@@ -24,7 +24,7 @@ export const Header = ({ onMenuClick, onUserClick }: Props) => {
             📄
           </div>
           <span className="font-semibold text-lg">
-            Document Manager
+            DocNest
           </span>
         </div>
       </div>

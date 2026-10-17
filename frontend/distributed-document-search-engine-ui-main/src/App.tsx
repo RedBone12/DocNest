@@ -5,6 +5,9 @@ import { ProtectedRoute } from "./components/common/ProtectedRoute";
 import { Documents } from "./pages/Documents";
 import { useAuth } from "./components/common/AuthContext";
 import { SettingsPage } from "./pages/SettingsPage";
+import { RegisterPage } from "./pages/RegisterPage";
+import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
+import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 
 function App() {
   const { token } = useAuth();
@@ -19,6 +22,9 @@ function App() {
 
         {/* Public */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         {/* Protected */}
         <Route element={<ProtectedRoute />}>

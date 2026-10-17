@@ -9,10 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 
 @Configuration
 public class SecurityConfig {
@@ -20,28 +21,30 @@ public class SecurityConfig {
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
     @Bean
-    public CorsWebFilter corsWebFilter() {
+    public UrlBasedCorsConfigurationSource corsConfigurationSource(
+            @Value("${docnest.cors-origins:http://localhost:[*],http://127.0.0.1:[*]}") String origins) {
         logger.info("Configuring CORS filter");
         
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOriginPatterns(Arrays.asList("*"));
+        corsConfig.setAllowedOriginPatterns(Arrays.asList(origins.split(",")));
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
         corsConfig.setAllowedHeaders(Arrays.asList("*"));
         corsConfig.setExposedHeaders(Arrays.asList("Content-Type", "Authorization", "X-Requested-With"));
-        corsConfig.setAllowCredentials(true);
+        corsConfig.setAllowCredentials(false);
         corsConfig.setMaxAge(3600L);
         
-        logger.debug("CORS configuration: allowed origins=*, allowed methods={}, allow credentials={}", 
+        logger.debug("CORS configuration: configured origin patterns, allowed methods={}, allow credentials={}",
                     corsConfig.getAllowedMethods(), corsConfig.getAllowCredentials());
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
         
-        return new CorsWebFilter(source);
+        return source;
     }
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http,
+            @Value("${docnest.auth-service-url:http://localhost:8081}") String authServiceUrl) {
         logger.info("Configuring security filter chain");
         
         try {
@@ -50,7 +53,8 @@ public class SecurityConfig {
                     csrf.disable();
                     logger.debug("CSRF protection disabled");
                 })
-                .cors(cors -> cors.disable())
+                .cors(org.springframework.security.config.Customizer.withDefaults())
+                .addFilterBefore(new SessionValidationFilter(authServiceUrl), SecurityWebFiltersOrder.AUTHORIZATION)
                 .exceptionHandling(exceptionHandling -> {
                     exceptionHandling.accessDeniedHandler((exchange, ex) -> {
                         logger.warn("Access denied for request to {}: {}", 

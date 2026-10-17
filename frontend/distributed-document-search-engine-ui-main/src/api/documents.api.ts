@@ -36,7 +36,8 @@ export async function uploadDocument(
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest();
     request.open("POST", apiUrl("/documents/upload"));
-    request.withCredentials = true;
+    // Authentication uses the explicit Bearer header, not cross-origin cookies.
+    request.withCredentials = false;
     request.timeout = 120000;
     Object.entries(headers).forEach(([key, value]) => request.setRequestHeader(key, value));
     request.upload.onprogress = (event) => {
@@ -120,7 +121,7 @@ export async function getDocumentStatus(
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      credentials: "include",
+      credentials: "omit",
     }
   );
 
@@ -140,7 +141,7 @@ export async function deleteDocument(
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    credentials: "include",
+    credentials: "omit",
   });
 
   if (response.status === 204) {

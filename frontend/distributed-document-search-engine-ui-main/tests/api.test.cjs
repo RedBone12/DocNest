@@ -28,6 +28,7 @@ test("search forwards pagination, filters and abort signal, preserving totals", 
     assert.equal(parsed.searchParams.get("q"), "hello");
     assert.equal(options.signal, signal);
     assert.equal(options.headers.Authorization, "Bearer test-token");
+    assert.equal(options.credentials, "omit");
     return { ok: true, json: async () => ({ total: 24, results: [{ documentId: "doc-1", title: "Title", status: "READY" }] }) };
   } });
   const result = await api.searchDocuments("hello", "test-token", { tags: " Java " }, 2, 10, signal);
@@ -73,6 +74,8 @@ test("upload reports transfer progress and waits for a successful response", asy
     token: "test-token", idempotencyKey: "request-1", onProgress: (percent) => progress.push(percent),
   });
   assert.equal(request.method, "POST");
+  assert.equal(request.withCredentials, false);
+  assert.equal(request.headers.Authorization, "Bearer test-token");
   assert.equal(request.headers["Idempotency-Key"], "request-1");
   request.upload.onprogress({ lengthComputable: true, loaded: 2, total: 4 });
   assert.deepEqual(progress, [50]);
@@ -94,4 +97,32 @@ test("upload network failure is surfaced rather than reported as saved", async (
   const pending = api.uploadDocument(new Blob(["test"]));
   request.onerror();
   await assert.rejects(pending, /service is currently unavailable/);
+});
+
+test("status polling and deletion use Bearer auth without cross-origin cookie credentials", async () => {
+  const calls = [];
+  const api = loadApi("documents.api", { fetch: async (url, options) => {
+    calls.push({ url, options });
+    return { ok: true, status: options.method === "DELETE" ? 204 : 200,
+      json: async () => ({ documentId: "doc-1", status: "READY" }) };
+  } });
+  const status = await api.getDocumentStatus("doc-1", "test-token");
+  assert.equal(status.status, "READY");
+  await api.deleteDocument("doc-1", "test-token");
+  assert.equal(calls.length, 2);
+  assert.match(calls[0].url, /\/documents\/doc-1\/status$/);
+  assert.equal(calls[1].options.method, "DELETE");
+  for (const { options } of calls) {
+    assert.equal(options.credentials, "omit");
+    assert.equal(options.headers.Authorization, "Bearer test-token");
+  }
+});
+
+test("API modules do not reintroduce credentialed-cookie requests against the Bearer gateway", () => {
+  const apiDirectory = path.join(__dirname, "../src/api");
+  for (const file of fs.readdirSync(apiDirectory).filter((name) => name.endsWith(".ts"))) {
+    const source = fs.readFileSync(path.join(apiDirectory, file), "utf8");
+    assert.doesNotMatch(source, /withCredentials\s*=\s*true/, `${file} enables credentialed XHR`);
+    assert.doesNotMatch(source, /credentials\s*:\s*["']include["']/, `${file} enables credentialed fetch`);
+  }
 });

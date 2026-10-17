@@ -67,7 +67,7 @@ export async function searchDocuments(
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    credentials: "include",
+    credentials: "omit",
   });
 
   if (!response.ok) {

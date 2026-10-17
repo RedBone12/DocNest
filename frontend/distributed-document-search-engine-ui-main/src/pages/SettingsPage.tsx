@@ -3,10 +3,11 @@ import { Settings, Sparkles, LayoutList, RotateCcw, Palette, Check } from "lucid
 import { DEFAULT_PREFERENCES, usePreferences } from "../hooks/usePreferences";
 import type { Preferences } from "../hooks/usePreferences";
 import { THEMES } from "../themes";
+import { AccountSecurity } from "../components/common/AccountSecurity";
 
 export const SettingsPage = () => {
   const { preferences, savePreferences } = usePreferences();
-  return <PreferencesEditor preferences={preferences} onSave={savePreferences} />;
+  return <><PreferencesEditor preferences={preferences} onSave={savePreferences} /><AccountSecurity /></>;
 };
 
 function PreferencesEditor({ preferences, onSave }: {

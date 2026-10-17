@@ -1,4 +1,6 @@
-# React + TypeScript + Vite
+# Archived Vite template notes
+
+This file is retained only as historical template documentation. For current DocNest features, setup, checks and limitations, use [README.md](README.md).
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

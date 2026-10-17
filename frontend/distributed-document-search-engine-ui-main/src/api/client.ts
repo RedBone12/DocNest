@@ -1,5 +1,7 @@
+import { readSession } from "../auth/session";
+
 export async function apiFetch(path: string, options: RequestInit = {}) {
-	const token = localStorage.getItem("authToken");
+	const token = readSession();
 	const headers = new Headers(options.headers || {});
 	
 	if (token) {
@@ -7,7 +9,6 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
 	}
 
 	const res = await fetch(path, {
-		credentials: "include",
 		...options,
 		headers,
 	});
