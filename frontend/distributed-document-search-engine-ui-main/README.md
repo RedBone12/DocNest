@@ -63,4 +63,10 @@ npm.cmd run lint
 npm.cmd test
 ```
 
+`npm.cmd test` runs the Node API/auth checks followed by the Vitest component and hook tests in jsdom.
+Use `npm.cmd run test:components` to run only component/hook tests, or `npm.cmd run test:watch` during development.
+The tests cover upload submission and failures, AI consent, progress display, deletion confirmation and refresh,
+protected routing, search cancellation, retry, processing polling and unmount cleanup.
+API calls are mocked in component/hook tests; these checks do not replace browser-to-backend end-to-end tests.
+
 The published monorepo uses the root `.github/workflows/ci.yml` for frontend checks, backend Maven tests and Compose validation. The independently versioned frontend/backend checkouts also contain their own workflows. Local changes do not reach GitHub until explicitly published.
