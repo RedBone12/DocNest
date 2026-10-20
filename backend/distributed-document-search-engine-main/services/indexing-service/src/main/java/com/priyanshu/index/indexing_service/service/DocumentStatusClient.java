@@ -13,6 +13,8 @@ import com.priyanshu.index.indexing_service.dto.AiAnalysis;
 @Service
 @Slf4j
 public class DocumentStatusClient {
+    @org.springframework.beans.factory.annotation.Value("${docnest.document-service-url:http://localhost:8081}")
+    private String documentServiceUrl = "http://localhost:8081";
 
     private IndexingService indexingService;
 
@@ -22,7 +24,7 @@ public class DocumentStatusClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public void updateStatus(String documentId, String status) {
-        String url = "http://localhost:8081/documents/" + documentId + "/status?status=" + status;
+        String url = documentServiceUrl + "/documents/" + documentId + "/status?status=" + status;
 
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -39,7 +41,7 @@ public class DocumentStatusClient {
     }
 
     public void updateAiMetadata(String documentId, AiAnalysis analysis) {
-        String url = "http://localhost:8081/documents/" + documentId + "/ai-metadata";
+        String url = documentServiceUrl + "/documents/" + documentId + "/ai-metadata";
 
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -58,7 +60,7 @@ public class DocumentStatusClient {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(indexingService.generateServiceToken());
         var body = java.util.Map.of("code", code, "message", message, "failureCount", failureCount);
-        restTemplate.exchange("http://localhost:8081/documents/" + documentId + "/indexing-failure",
+        restTemplate.exchange(documentServiceUrl + "/documents/" + documentId + "/indexing-failure",
                 HttpMethod.PUT, new HttpEntity<>(body, headers), Void.class);
     }
 }

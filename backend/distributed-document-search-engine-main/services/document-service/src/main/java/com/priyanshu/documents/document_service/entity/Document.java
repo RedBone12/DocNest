@@ -151,7 +151,7 @@ public class Document {
     }
 
     public List<String> getAiTags() {
-        return aiTags;
+        return new ArrayList<>(aiTags);
     }
 
     public void setAiTags(List<String> aiTags) {

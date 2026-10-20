@@ -15,6 +15,8 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - name: Production dependency security gate
+        run: npm audit --omit=dev --audit-level=high
       - name: TypeScript and production build
         env:
           VITE_API_BASE_URL: http://localhost:8080
@@ -23,3 +25,12 @@ jobs:
         run: npm run lint
       - name: API behavior tests
         run: npm test
+      - name: Coverage gate
+        env:
+          VITE_API_BASE_URL: http://localhost:8080
+        run: npm run test:coverage
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-coverage
+          path: coverage/

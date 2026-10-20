@@ -12,7 +12,7 @@ function loadApi(name, extra) {
   vm.runInNewContext(code, {
     exports, URL, FormData, ...extra,
     require: (module) => module === "../config"
-      ? { apiUrl: (route) => "http://localhost:8080" + route }
+      ? { apiUrl: (route) => (extra.apiBaseUrl ?? "http://localhost:8080") + route }
       : loadApi("errors", {}),
   });
   return exports;
@@ -41,6 +41,21 @@ test("an empty search preserves zero total and no results", async () => {
   const result = await api.searchDocuments("missing", "test-token");
   assert.equal(result.total, 0);
   assert.equal(result.documents.length, 0);
+});
+
+test("search resolves a relative API prefix against the browser origin", async () => {
+  const api = loadApi("search.api", {
+    apiBaseUrl: "/api",
+    location: { origin: "https://docnest.example" },
+    fetch: async (url) => {
+      const parsed = new URL(url);
+      assert.equal(parsed.origin, "https://docnest.example");
+      assert.equal(parsed.pathname, "/api/search");
+      assert.equal(parsed.searchParams.get("q"), "quartz");
+      return { ok: true, json: async () => ({ total: 0, results: [] }) };
+    },
+  });
+  await api.searchDocuments("quartz", "test-token");
 });
 
 test("service failures and expired sessions have actionable messages", async () => {

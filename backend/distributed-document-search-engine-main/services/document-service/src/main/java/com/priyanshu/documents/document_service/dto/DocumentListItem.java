@@ -10,6 +10,9 @@ public record DocumentListItem(
     String aiStatus, String aiMessage, String failureCode, String failureMessage,
     Integer failureCount, Instant failedAt
 ) {
+    public DocumentListItem {
+        aiTags = aiTags == null ? null : List.copyOf(aiTags);
+    }
     public DocumentListItem(UUID documentId, String title, String description, String status,
             Long fileSize, Instant createdAt, String aiSummary, List<String> aiTags,
             String aiStatus, String aiMessage) {

@@ -1,0 +1,13 @@
+<configuration>
+    <springProfile name="container">
+        <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"service":"indexing-service"}</customFields>
+            </encoder>
+        </appender>
+        <root level="INFO"><appender-ref ref="JSON"/></root>
+    </springProfile>
+    <springProfile name="!container">
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    </springProfile>
+</configuration>

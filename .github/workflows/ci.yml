@@ -22,13 +22,21 @@ jobs:
       - name: Build MinIO test image from pinned upstream source
         run: docker build -t docnest/minio-ci:2025-09-07 -f infra/minio-ci.Dockerfile infra
       - name: Maven tests
-        run: mvn -B -ntp -Ddocnest.minio.image=docnest/minio-ci:2025-09-07 test
+        run: mvn -B -ntp -Ddocnest.minio.image=docnest/minio-ci:2025-09-07 verify
+      - name: Aggregate coverage gate
+        run: pwsh -NoProfile -File quality/check-aggregate-coverage.ps1
       - name: Test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: backend-test-reports
-          path: backend/distributed-document-search-engine-main/services/**/target/surefire-reports/
+          path: |
+            backend/distributed-document-search-engine-main/services/**/target/surefire-reports/
+            backend/distributed-document-search-engine-main/services/**/target/failsafe-reports/
+            backend/distributed-document-search-engine-main/services/**/target/site/jacoco/
+            backend/distributed-document-search-engine-main/services/**/target/site/jacoco-aggregate/
+            backend/distributed-document-search-engine-main/services/**/target/checkstyle-result.xml
+            backend/distributed-document-search-engine-main/services/**/target/spotbugsXml.xml
           if-no-files-found: warn
   frontend:
     runs-on: ubuntu-latest
@@ -43,6 +51,8 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/distributed-document-search-engine-ui-main/package-lock.json
       - run: npm ci
+      - name: Production dependency security gate
+        run: npm audit --omit=dev --audit-level=high
       - name: TypeScript and production build
         env:
           VITE_API_BASE_URL: http://localhost:8080
@@ -51,6 +61,16 @@ jobs:
         run: npm run lint
       - name: Frontend behavior tests
         run: npm test
+      - name: Frontend coverage gate
+        env:
+          VITE_API_BASE_URL: http://localhost:8080
+        run: npm run test:coverage
+      - name: Frontend coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: frontend/distributed-document-search-engine-ui-main/coverage/
   compose:
     runs-on: ubuntu-latest
     steps:

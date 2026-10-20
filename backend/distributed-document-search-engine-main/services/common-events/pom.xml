@@ -22,4 +22,16 @@
         <!-- No dependencies needed for now -->
     </dependencies>
 
+    <build><plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId><artifactId>maven-checkstyle-plugin</artifactId><version>3.6.0</version>
+            <configuration><configLocation>${project.basedir}/../../quality/checkstyle.xml</configLocation><includeTestSourceDirectory>true</includeTestSourceDirectory><failOnViolation>true</failOnViolation></configuration>
+            <executions><execution><id>checkstyle-check</id><phase>verify</phase><goals><goal>check</goal></goals></execution></executions>
+        </plugin>
+        <plugin>
+            <groupId>com.github.spotbugs</groupId><artifactId>spotbugs-maven-plugin</artifactId><version>4.9.8.2</version>
+            <configuration><effort>Max</effort><threshold>Medium</threshold><failOnError>true</failOnError><excludeFilterFile>${project.basedir}/../../quality/spotbugs-exclude.xml</excludeFilterFile></configuration>
+            <executions><execution><id>spotbugs-check</id><phase>verify</phase><goals><goal>check</goal></goals></execution></executions>
+        </plugin>
+    </plugins></build>
 </project>

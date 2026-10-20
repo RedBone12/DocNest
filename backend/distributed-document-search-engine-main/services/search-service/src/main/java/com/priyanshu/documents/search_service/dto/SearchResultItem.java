@@ -15,5 +15,8 @@ public record SearchResultItem(
     String aiStatus,
     String aiMessage
 ) {
-
+    public SearchResultItem {
+        contentHighlights = contentHighlights == null ? null : List.copyOf(contentHighlights);
+        aiTags = aiTags == null ? null : List.copyOf(aiTags);
+    }
 }

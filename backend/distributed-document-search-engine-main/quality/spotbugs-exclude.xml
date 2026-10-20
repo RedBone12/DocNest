@@ -1,0 +1,31 @@
+<FindBugsFilter>
+    <!-- Spring-managed collaborators are deliberately shared, not copied. -->
+    <Match>
+        <Class name="~com\.priyanshu\..*\.(configuration|config|controller|security|service|messaging)\..*"/>
+        <Method name="&lt;init&gt;"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <!-- Constructor validation in Spring services does not expose finalizers. -->
+    <Match>
+        <Class name="com.priyanshu.documents.document_service.security.JwtService"/>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+    </Match>
+    <Match>
+        <Class name="com.priyanshu.documents.document_service.service.PasswordRecoveryService"/>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+    </Match>
+    <!-- Jackson reads these public transport fields reflectively. -->
+    <Match>
+        <Class name="com.priyanshu.index.indexing_service.dto.SearchDocument"/>
+        <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+    <!-- Signing-key validation in these constructors has no finalizer exposure. -->
+    <Match>
+        <Class name="com.priyanshu.index.indexing_service.service.IndexingService"/>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+    </Match>
+    <Match>
+        <Class name="com.priyanshu.documents.search_service.security.JwtService"/>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+    </Match>
+</FindBugsFilter>

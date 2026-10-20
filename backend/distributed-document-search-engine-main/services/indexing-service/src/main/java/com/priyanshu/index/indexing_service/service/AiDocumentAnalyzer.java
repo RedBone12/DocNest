@@ -313,11 +313,18 @@ public class AiDocumentAnalyzer {
     }
 
     private String extractErrorCode(String responseBody) {
+        if (responseBody == null || responseBody.isBlank()) {
+            return "";
+        }
         try {
-            JsonNode error = mapper.readTree(responseBody).path("error");
+            JsonNode root = mapper.readTree(responseBody);
+            if (root == null) {
+                return "";
+            }
+            JsonNode error = root.path("error");
             String code = error.path("code").asText();
             return code.isBlank() ? error.path("type").asText() : code;
-        } catch (Exception ignored) {
+        } catch (com.fasterxml.jackson.core.JsonProcessingException ignored) {
             return "";
         }
     }

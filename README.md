@@ -1,5 +1,23 @@
 # DocNest
 
+## Zero-cloud-cost local demo
+
+With Docker Desktop running in Linux container mode, run these commands from the project root:
+
+```powershell
+powershell.exe -NoProfile -File .\deploy\demo.ps1 -Action Start
+powershell.exe -NoProfile -File .\deploy\demo.ps1 -Action Verify -RecordVideo
+powershell.exe -NoProfile -File .\deploy\demo.ps1 -Action Stop
+```
+
+Open http://localhost:8088. Use `-Build` with Start after changing application source. The demo uses explicit local-only example credentials and isolated `docnest-app` volumes; do not expose it publicly or upload real private documents. Stop preserves data. Verification creates a disposable account and deletes its test document, but retains the account. No cloud deployment or paid AI API is required. See [the demo guide](docs/local-demo.md) for prerequisites, recording and troubleshooting.
+
+## Quality and container deployment
+
+The development checkout includes per-service coverage gates, a full backend JaCoCo report, Checkstyle, SpotBugs, frontend Vitest coverage and a real Playwright document lifecycle test. Run Maven `clean verify` for backend quality checks and `npm run test:coverage` for frontend coverage. Current coverage floors are measured baselines, not a claim that every module reaches 90%.
+
+See [quality standards](docs/quality.md) and [deployment and operations](docs/operations.md). The full application stack is declared in `deploy/compose.yaml`; it uses separate volumes from the local infrastructure setup. The four Java images and React/Nginx image have been built locally and the browser acceptance test passed. This does not constitute a cloud deployment. Publication uses the separate `.publish` checkout; always check the remote commit and its CI results rather than assuming local edits are published.
+
 Document storage and full-text search with asynchronous indexing, optional AI summaries, and user preferences. The website is named **DocNest**.
 
 - Backend repository: `backend/distributed-document-search-engine-main`

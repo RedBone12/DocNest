@@ -19,7 +19,7 @@ public class ErrorResponse {
         this.status = status;
         this.message = message;
         this.timestamp = timestamp;
-        this.errors = errors;
+        this.errors = errors == null ? null : Map.copyOf(errors);
     }
 
     // Getters and setters
@@ -52,6 +52,6 @@ public class ErrorResponse {
     }
 
     public void setErrors(Map<String, String> errors) {
-        this.errors = errors;
+        this.errors = errors == null ? null : Map.copyOf(errors);
     }
 }

@@ -9,5 +9,12 @@ export default defineConfig({
     setupFiles: ["./tests/setup.ts"],
     restoreMocks: true,
     clearMocks: true,
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["src/main.tsx", "src/types/**"],
+      reporter: ["text", "html", "json-summary", "lcov"],
+      thresholds: { lines: 21, statements: 21, branches: 58, functions: 38 },
+    },
   },
 });

@@ -18,6 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Slf4j
 public class ElasticsearchConfig {
+    @org.springframework.beans.factory.annotation.Value("${elasticsearch.host:localhost}")
+    private String host = "localhost";
+    @org.springframework.beans.factory.annotation.Value("${elasticsearch.port:9200}")
+    private int port = 9200;
 
     @Bean
     public ElasticsearchClient elasticsearchClient() {
@@ -29,7 +33,7 @@ public class ElasticsearchConfig {
                     .build();
 
             RestClient restClient = RestClient.builder(
-                    new HttpHost("localhost", 9200)
+                    new HttpHost(host, port)
             ).build();
 
             ElasticsearchTransport transport =

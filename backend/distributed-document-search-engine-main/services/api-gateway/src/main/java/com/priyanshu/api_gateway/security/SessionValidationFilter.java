@@ -4,7 +4,9 @@ import java.time.Duration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.server.*;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /** Checks server-side revocation before routing user requests, including search. */
@@ -20,7 +22,7 @@ public class SessionValidationFilter implements WebFilter {
         return exchange.getPrincipal().map(principal -> {
             if (principal instanceof JwtAuthenticationToken authentication) {
                 String type = authentication.getToken().getClaimAsString("type");
-                if ("service".equals(type)) return chain.filter(exchange);
+                if ("service".equals(type)) { return chain.filter(exchange); }
                 if (!"user".equals(type)) {
                     exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                     return exchange.getResponse().setComplete();
@@ -31,7 +33,7 @@ public class SessionValidationFilter implements WebFilter {
                         .timeout(Duration.ofSeconds(5))
                         .onErrorReturn(503)
                         .flatMap(status -> {
-                            if (status == 200) return chain.filter(exchange);
+                            if (status == 200) { return chain.filter(exchange); }
                             exchange.getResponse().setStatusCode(status == 401 || status == 403
                                     ? HttpStatus.UNAUTHORIZED : HttpStatus.SERVICE_UNAVAILABLE);
                             return exchange.getResponse().setComplete();

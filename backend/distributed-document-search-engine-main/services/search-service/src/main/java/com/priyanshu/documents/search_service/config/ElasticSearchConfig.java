@@ -18,6 +18,10 @@ import co.elastic.clients.transport.rest_client.RestClientTransport;
 
 @Configuration
 public class ElasticSearchConfig {
+    @org.springframework.beans.factory.annotation.Value("${elasticsearch.host:localhost}")
+    private String host = "localhost";
+    @org.springframework.beans.factory.annotation.Value("${elasticsearch.port:9200}")
+    private int port = 9200;
 
     private static final Logger logger = LoggerFactory.getLogger(ElasticSearchConfig.class);
 
@@ -30,11 +34,11 @@ public class ElasticSearchConfig {
 
     @Bean
     public ElasticsearchClient elasticsearchClient(ObjectMapper objectMapper) {
-        logger.info("Initializing Elasticsearch client connection to localhost:9200");
+        logger.info("Initializing Elasticsearch client connection to {}:{}", host, port);
 
         try {
             RestClient restClient = RestClient.builder(
-                    new HttpHost("localhost", 9200)
+                    new HttpHost(host, port)
             ).build();
 
             ElasticsearchTransport transport =

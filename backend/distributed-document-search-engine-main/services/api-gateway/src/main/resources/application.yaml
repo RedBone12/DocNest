@@ -14,19 +14,19 @@ spring:
       routes:
         # Document Service - documents endpoints
         - id: document-service-docs
-          uri: http://localhost:8081
+          uri: ${DOCUMENT_SERVICE_URL:http://localhost:8081}
           predicates:
             - Path=/documents/**
 
         # Document Service - auth endpoints
         - id: document-service-auth
-          uri: http://localhost:8081
+          uri: ${DOCUMENT_SERVICE_URL:http://localhost:8081}
           predicates:
             - Path=/auth/**
 
         # Search Service
         - id: search-service
-          uri: http://localhost:8083
+          uri: ${SEARCH_SERVICE_URL:http://localhost:8083}
           predicates:
             - Path=/search/**
 

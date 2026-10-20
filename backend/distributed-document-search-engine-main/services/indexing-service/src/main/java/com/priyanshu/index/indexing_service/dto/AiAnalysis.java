@@ -8,6 +8,9 @@ public record AiAnalysis(
         String status,
         String message
 ) {
+    public AiAnalysis {
+        tags = tags == null ? null : List.copyOf(tags);
+    }
     public static AiAnalysis completed(String summary, List<String> tags) {
         return new AiAnalysis(summary, List.copyOf(tags), "COMPLETED", null);
     }

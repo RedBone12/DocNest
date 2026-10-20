@@ -71,7 +71,7 @@ public class SecurityConfig {
                 })
                 .authorizeExchange(ex -> {
                     ex.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    ex.pathMatchers("/auth/**", "/actuator/health").permitAll();
+                    ex.pathMatchers("/auth/**", "/actuator/health", "/actuator/health/**").permitAll();
                     ex.anyExchange().authenticated();
                     logger.debug("Authorization rules configured - public paths: /auth/**, /actuator/health, OPTIONS requests");
                 })

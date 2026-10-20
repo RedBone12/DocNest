@@ -8,4 +8,7 @@ public record AiMetadataRequest(
         String status,
         String message
 ) {
+    public AiMetadataRequest {
+        tags = tags == null ? null : List.copyOf(tags);
+    }
 }

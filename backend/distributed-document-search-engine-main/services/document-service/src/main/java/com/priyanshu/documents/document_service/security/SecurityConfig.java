@@ -25,7 +25,7 @@ public class SecurityConfig {
                         response.setStatus(jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED)))
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/health").permitAll()
+                        .requestMatchers("/health", "/actuator/health", "/actuator/health/**").permitAll()
                         .requestMatchers("/documents/upload").authenticated()
                         .requestMatchers("/documents/*/download").authenticated()
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/documents/*/status", "/documents/*/indexing-failure").hasAuthority("SERVICE")

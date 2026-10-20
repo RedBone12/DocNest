@@ -53,7 +53,7 @@ export async function searchDocuments(
   size = 10,
   signal?: AbortSignal,
 ): Promise<{ documents: DocumentDto[]; total: number }> {
-  const url = new URL(apiUrl("/search"));
+  const url = new URL(apiUrl("/search"), globalThis.location?.origin);
   url.searchParams.set("q", query);
   url.searchParams.set("page", String(page));
   url.searchParams.set("size", String(size));

@@ -19,13 +19,21 @@ jobs:
       - name: Build MinIO test image from pinned upstream source
         run: docker build -t docnest/minio-ci:2025-09-07 -f infra/minio-ci.Dockerfile infra
       - name: Run Maven tests (including Docker-backed pipeline tests)
-        run: mvn -B -ntp -Ddocnest.minio.image=docnest/minio-ci:2025-09-07 test
+        run: mvn -B -ntp -Ddocnest.minio.image=docnest/minio-ci:2025-09-07 verify
+      - name: Aggregate coverage gate
+        run: pwsh -NoProfile -File quality/check-aggregate-coverage.ps1
       - name: Publish test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: backend-test-reports
-          path: services/**/target/surefire-reports/
+          path: |
+            services/**/target/surefire-reports/
+            services/**/target/failsafe-reports/
+            services/**/target/site/jacoco/
+            services/**/target/site/jacoco-aggregate/
+            services/**/target/checkstyle-result.xml
+            services/**/target/spotbugsXml.xml
           if-no-files-found: warn
   compose:
     runs-on: ubuntu-latest

@@ -6,5 +6,7 @@ public record SearchResponse(
     long total,
     List<SearchResultItem> results
 ) {
-
+    public SearchResponse {
+        results = results == null ? null : List.copyOf(results);
+    }
 }
