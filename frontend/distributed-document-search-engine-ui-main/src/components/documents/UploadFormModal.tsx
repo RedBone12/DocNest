@@ -86,7 +86,7 @@ export function UploadFormModal({
   if (!isOpen) return null;
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4"
+      className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 px-4"
       onClick={handleClose}
     >
       <div
@@ -120,7 +120,7 @@ export function UploadFormModal({
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               disabled={isUploading}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black disabled:opacity-60"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-hidden focus:ring-2 focus:ring-black disabled:opacity-60"
             />
           </div>
 
@@ -164,9 +164,9 @@ export function UploadFormModal({
                     className="flex items-center justify-between rounded-md bg-slate-50 p-2"
                   >
                     <div className="flex min-w-0 flex-1 items-center gap-2">
-                      <FileText className="h-4 w-4 flex-shrink-0 text-gray-500" />
+                      <FileText className="h-4 w-4 shrink-0 text-gray-500" />
                       <span className="truncate text-sm">{file.name}</span>
-                      <span className="flex-shrink-0 text-xs text-gray-500">
+                      <span className="shrink-0 text-xs text-gray-500">
                         ({(file.size / 1024 / 1024).toFixed(2)} MB)
                       </span>
                     </div>
@@ -175,7 +175,7 @@ export function UploadFormModal({
                       onClick={() => handleRemoveFile(index)}
                       aria-label={`Remove ${file.name}`}
                       disabled={isUploading}
-                      className="rounded p-1 text-gray-500 hover:bg-gray-200 hover:text-gray-800 disabled:opacity-50"
+                      className="rounded-sm p-1 text-gray-500 hover:bg-gray-200 hover:text-gray-800 disabled:opacity-50"
                     >
                       <X className="h-4 w-4" />
                     </button>

@@ -205,7 +205,7 @@ export const DocumentTable = ({
                 <td className={`${cellSpacing} align-top`}>
                   <div className="flex items-center gap-2">
                     <FileText size={16} className="shrink-0 text-gray-500" />
-                    <span className="font-medium break-words min-w-0">{doc.title}</span>
+                    <span className="font-medium wrap-break-word min-w-0">{doc.title}</span>
                   </div>
 
                   {searchQuery.trim() &&
@@ -218,7 +218,7 @@ export const DocumentTable = ({
                         {doc.contentHighlights?.map((fragment, index) => (
                           <p
                             key={index}
-                            className="break-words text-sm leading-6 text-gray-600"
+                            className="wrap-break-word text-sm leading-6 text-gray-600"
                           >
                             <HighlightedText text={fragment} />
                           </p>

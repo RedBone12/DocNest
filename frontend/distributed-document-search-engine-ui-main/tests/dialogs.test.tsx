@@ -19,7 +19,7 @@ describe("Delete confirmation", () => {
     render(<DeleteConfirmationModal isOpen onClose={vi.fn()} onConfirm={confirm} documentName="Annual Report" />);
     expect(screen.getByRole("dialog", { name: "Delete Document" })).toHaveTextContent("Annual Report");
     expect(confirm).not.toHaveBeenCalled();
-    await userEvent.click(screen.getByRole("button", { name: "Delete", exact: true }));
+    await userEvent.click(screen.getByRole("button", { name: "Delete" }));
     expect(confirm).toHaveBeenCalledTimes(1);
   });
 
@@ -54,7 +54,7 @@ describe("Delete confirmation", () => {
 describe("Upload dialog", () => {
   it("requires a file and keeps AI analysis opt-in", () => {
     render(<UploadFormModal isOpen onClose={vi.fn()} onUpload={vi.fn()} />);
-    expect(screen.getByRole("button", { name: "Upload", exact: true })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Upload" })).toBeDisabled();
     expect(screen.getByRole("checkbox")).not.toBeChecked();
   });
 
@@ -67,7 +67,7 @@ describe("Upload dialog", () => {
     await user.upload(screen.getByLabelText("Select files"), file);
     await user.type(screen.getByLabelText("Description (Optional)"), "Quarterly results");
     await user.click(screen.getByRole("checkbox"));
-    await user.click(screen.getByRole("button", { name: "Upload (1)", exact: true }));
+    await user.click(screen.getByRole("button", { name: "Upload (1)" }));
     await waitFor(() => expect(close).toHaveBeenCalledOnce());
     expect(upload).toHaveBeenCalledOnce();
     const [files, description, consent] = upload.mock.calls[0];
@@ -82,12 +82,12 @@ describe("Upload dialog", () => {
     const close = vi.fn();
     render(<UploadFormModal isOpen onClose={close} onUpload={upload} />);
     await user.upload(screen.getByLabelText("Select files"), new File(["report"], "report.pdf"));
-    await user.click(screen.getByRole("button", { name: "Upload (1)", exact: true }));
+    await user.click(screen.getByRole("button", { name: "Upload (1)" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Storage unavailable");
     expect(screen.getByText("report.pdf")).toBeInTheDocument();
     expect(close).not.toHaveBeenCalled();
     upload.mockResolvedValue(undefined);
-    await user.click(screen.getByRole("button", { name: "Upload (1)", exact: true }));
+    await user.click(screen.getByRole("button", { name: "Upload (1)" }));
     await waitFor(() => expect(close).toHaveBeenCalledOnce());
     expect(upload).toHaveBeenCalledTimes(2);
   });

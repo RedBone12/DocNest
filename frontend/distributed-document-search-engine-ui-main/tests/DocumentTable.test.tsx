@@ -43,7 +43,7 @@ it("deletes only after confirmation and requests a library refresh on success", 
   const refreshed = mount();
   await userEvent.click(screen.getByRole("button", { name: "Delete Report" }));
   expect(deleteDocument).not.toHaveBeenCalled();
-  await userEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Delete", exact: true }));
+  await userEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Delete" }));
   await waitFor(() => expect(refreshed).toHaveBeenCalledOnce());
   expect(deleteDocument).toHaveBeenCalledWith("doc-1", "token");
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -54,7 +54,7 @@ it("keeps the dialog open and does not refresh when deletion fails", async () =>
   const alert = vi.spyOn(window, "alert").mockImplementation(() => {});
   const refreshed = mount();
   await userEvent.click(screen.getByRole("button", { name: "Delete Report" }));
-  await userEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Delete", exact: true }));
+  await userEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Delete" }));
   await waitFor(() => expect(alert).toHaveBeenCalledWith("Delete failed"));
   expect(screen.getByRole("dialog")).toBeInTheDocument();
   expect(refreshed).not.toHaveBeenCalled();

@@ -89,7 +89,7 @@ export const UserPanel = ({
           <h2 className="text-lg font-semibold">User Profile</h2>
           <button
             onClick={onClose}
-            className="rounded p-1 text-gray-600 hover:bg-gray-100"
+            className="rounded-sm p-1 text-gray-600 hover:bg-gray-100"
             aria-label="Close user panel"
           >
             <X size={18} />

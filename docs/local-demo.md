@@ -2,7 +2,7 @@
 
 ## Scope and prerequisites
 
-This mode adds no cloud hosting charges. It uses your computer, disk, electricity and network. It is not a public hosted site. Install Docker Desktop with Linux containers, Node.js/npm and the frontend dependencies (`npm.cmd ci` in the frontend folder). Install the browser once with `npx.cmd playwright install chromium` in that folder. Docker Desktop must have enough available memory for four JVMs, Kafka and Elasticsearch; startup failures must be diagnosed rather than assuming every laptop supports this stack.
+This mode adds no cloud hosting charges. It uses your computer, disk, electricity and network. It is not a public hosted site. Install Docker Desktop with Linux containers, Node.js 22.12+ (or supported Node 24)/npm and the frontend dependencies (`npm.cmd ci` in the frontend folder). Install the browser once with `npx.cmd playwright install chromium` in that folder. Docker Desktop must have enough available memory for four JVMs, Kafka and Elasticsearch; startup failures must be diagnosed rather than assuming every laptop supports this stack.
 
 Run `deploy/demo.ps1` from PowerShell as documented in the root README. First startup may download/build images and take several minutes. `Start -Build` rebuilds application images after code changes; ordinary Start reuses available images. `Status` displays container health. `Verify` requires a running stack and local frontend dependencies; it tests registration, login, upload, indexing, content search, byte-for-byte download and deletion against real services. It does not test SMTP recovery or paid AI analysis.
 

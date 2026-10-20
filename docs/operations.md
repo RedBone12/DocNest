@@ -54,6 +54,8 @@ The first command is a dry run. The second requeues only that selected event to 
 
 ## Cloud rollout and rollback
 
+For the non-cloud synthetic PostgreSQL/MinIO backup and restore exercise, see [the recovery drill](recovery.md). Its successful one-row/one-object verification does not replace the full-tenant restore validation below.
+
 Before creating resources, choose the account, region, host size, monthly budget and domain. This stack needs enough memory for Elasticsearch, Kafka, four JVMs and builds; measure locally rather than promising a free-tier deployment. Use an HTTPS ingress/load balancer, restrictive firewall, persistent disks, secret storage and a backup/restore drill. MinIO and Elasticsearch are unauthenticated on the private application network and must never be publicly exposed.
 
 Record the deployed Git commit and image digests. Back up PostgreSQL and MinIO data together, and verify restoration in isolation. Elasticsearch can be rebuilt only if retained source objects and metadata support reindexing. The current Hibernate `ddl-auto=update` is a development limitation: review schema changes or add versioned migrations before public production deployment.

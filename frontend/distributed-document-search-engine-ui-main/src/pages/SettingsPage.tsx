@@ -56,9 +56,9 @@ function PreferencesEditor({ preferences, onSave }: {
             <p className="mt-1 text-sm text-gray-500">Choose a palette, then save your changes to apply it across DocNest.</p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {THEMES.map((theme) => (
-                <label key={theme.id} className="theme-choice relative cursor-pointer rounded-xl border-2 p-4 transition-shadow hover:shadow-sm" style={{ borderColor: current.theme === theme.id ? theme.colors[0] : "var(--theme-border)" }}>
+                <label key={theme.id} className="theme-choice relative cursor-pointer rounded-xl border-2 p-4 transition-shadow hover:shadow-xs" style={{ borderColor: current.theme === theme.id ? theme.colors[0] : "var(--theme-border)" }}>
                   <input type="radio" name="color-theme" value={theme.id} checked={current.theme === theme.id} onChange={() => update({ theme: theme.id })} className="peer sr-only" />
-                  <span className="absolute inset-0 rounded-xl peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2" style={{ outlineColor: theme.colors[0] }} />
+                  <span className="absolute inset-0 rounded-xl peer-focus-visible:outline-solid peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2" style={{ outlineColor: theme.colors[0] }} />
                   <span className="flex items-center justify-between">
                     <span className="flex gap-1.5" aria-hidden="true">
                       {theme.colors.map((color) => <span key={color} className="h-6 w-6 rounded-full ring-1 ring-black/10" style={{ backgroundColor: color }} />)}

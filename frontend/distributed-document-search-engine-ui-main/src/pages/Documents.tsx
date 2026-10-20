@@ -140,7 +140,7 @@ export const Documents = () => {
                 setFilters((current) => ({ ...current, tags: event.target.value }))
               }
               placeholder="e.g. Java, cloud"
-              className="w-full rounded-lg border px-3 py-2 focus:border-black focus:outline-none"
+              className="w-full rounded-lg border px-3 py-2 focus:border-black focus:outline-hidden"
             />
           </label>
 
@@ -153,7 +153,7 @@ export const Documents = () => {
               onChange={(event) =>
                 setFilters((current) => ({ ...current, fromDate: event.target.value }))
               }
-              className="w-full rounded-lg border px-3 py-2 focus:border-black focus:outline-none"
+              className="w-full rounded-lg border px-3 py-2 focus:border-black focus:outline-hidden"
             />
           </label>
 
@@ -166,7 +166,7 @@ export const Documents = () => {
               onChange={(event) =>
                 setFilters((current) => ({ ...current, toDate: event.target.value }))
               }
-              className="w-full rounded-lg border px-3 py-2 focus:border-black focus:outline-none"
+              className="w-full rounded-lg border px-3 py-2 focus:border-black focus:outline-hidden"
             />
           </label>
 

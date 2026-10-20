@@ -28,7 +28,7 @@ export function HighlightedText({ text }: HighlightedTextProps) {
         return (
           <mark
             key={index}
-            className="rounded bg-yellow-200 px-0.5 text-gray-900"
+            className="rounded-sm bg-yellow-200 px-0.5 text-gray-900"
           >
             {word}
           </mark>
