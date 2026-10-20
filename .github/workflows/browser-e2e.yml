@@ -20,11 +20,11 @@ jobs:
           cache-dependency-path: frontend/distributed-document-search-engine-ui-main/package-lock.json
       - name: Build pinned MinIO
         run: docker build -t docnest/minio-ci:2025-09-07 -f backend/distributed-document-search-engine-main/infra/minio-ci.Dockerfile backend/distributed-document-search-engine-main/infra
-      - name: Start isolated application stack
-        run: docker compose --env-file deploy/.env.example -f deploy/compose.yaml up -d --build --wait --wait-timeout 600
       - name: Synthetic storage backup and restore drill
         shell: pwsh
         run: ./deploy/recovery-drill.ps1 -OutputRoot "${{ runner.temp }}/docnest-recovery"
+      - name: Start isolated application stack
+        run: docker compose --env-file deploy/.env.example -f deploy/compose.yaml up -d --build --wait --wait-timeout 600
       - name: Install browser test dependencies
         working-directory: frontend/distributed-document-search-engine-ui-main
         run: |

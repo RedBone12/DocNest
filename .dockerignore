@@ -9,4 +9,5 @@
 **/playwright-report
 **/test-results
 .publish
+.local-recovery
 work

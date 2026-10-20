@@ -1,6 +1,6 @@
 param([string]$OutputRoot = "$PSScriptRoot/../.local-recovery")
 $ErrorActionPreference = 'Stop'
-$dockerBinary = (Get-Command docker -CommandType Application -ErrorAction Stop).Source
+$dockerBinary = (Get-Command docker -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
 $runId = 'docnest-drill-' + [guid]::NewGuid().ToString('N').Substring(0, 10)
 $runDir = Join-Path ([IO.Path]::GetFullPath($OutputRoot)) $runId
 New-Item -ItemType Directory -Path $runDir | Out-Null
